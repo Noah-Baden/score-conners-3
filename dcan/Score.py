@@ -1,4 +1,4 @@
-import math
+from os.path import exists
 
 import pandas as pd
 
@@ -20,18 +20,19 @@ def do_scoring(parents_score_file, teacher_score_file, lookup_table_file):
                 else:
                     column_name_to_score[column_name] += looked_up_score
 
-    return dict
+    return column_name_to_score
 
-def get_t_score(age, column_name_to_score):
+def get_t_score(age, gender, column_name_to_score):
     result = column_name_to_score.copy()
     t_val = -1
     for key in column_name_to_score.keys():
-        csv_file = f'{key}.csv'
+        csv_file = f'data/{gender}_{key.lower()}.csv'
+        if not exists(csv_file):
+            continue
         df = pd.read_csv(csv_file)
-        col = age - 12
-        row = 0
-        for row in df.loc[df[age]]:
-            if row[0] == column_name_to_score[key]:
+        for row in df[str(age)]:
+            row = int(row)
+            if row == column_name_to_score[key]:
                 t_val = 90 - row
                 break
             row += 1
