@@ -45,15 +45,16 @@ def get_t_score(age, gender, column_name_to_score):
         if not exists(csv_file):
             continue
         df = pd.read_csv(csv_file)
-        t_val = 90
-        for row in df[str(age)]:
-            if math.isnan(row):
-                t_val -= 1
+        age_str = str(age)
+        column_0_name = 'Unnamed: 0'
+        age_column = df[[column_0_name, age_str]]
+        scores_df = age_column.rename(columns={"Unnamed: 0": "t-score", age_str: "raw score"})
+        raw_score = column_name_to_score[key]
+        row = None
+        for index, row in scores_df.iterrows():
+            if math.isnan(row['raw score']):
                 continue
-            row = int(row)
-            if row <= column_name_to_score[key]:
+            if int(row['raw score']) <= raw_score:
                 break
-            t_val -= 1
-        score = column_name_to_score[key]
-        result[key] = (score, t_val)
+        result[key] = (raw_score, int(row['t-score']))
     return result
