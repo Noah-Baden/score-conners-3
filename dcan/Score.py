@@ -2,7 +2,17 @@ from os.path import exists
 
 import pandas as pd
 
-def do_scoring(parents_score_file, teacher_score_file, lookup_table_file):
+
+def do_total_scoring():
+    parents_score_file = "data/inputdata_conners3parent.csv"
+    # TODO Implement using teacher_score_file
+    lookup_table_file = "data/scoringsheet_conners3parent.csv"
+    column_name_to_score = do_scoring(parents_score_file, lookup_table_file)
+    get_t_score(9, 'female', column_name_to_score)
+
+
+# TODO Implement for teacher_score_file
+def do_scoring(parents_score_file, lookup_table_file):
     parents_scoring_df = pd.read_csv(parents_score_file)
     column_count = parents_scoring_df.size
     column_name_to_score = {}
@@ -21,6 +31,7 @@ def do_scoring(parents_score_file, teacher_score_file, lookup_table_file):
                     column_name_to_score[column_name] += looked_up_score
 
     return column_name_to_score
+
 
 def get_t_score(age, gender, column_name_to_score):
     result = column_name_to_score.copy()
