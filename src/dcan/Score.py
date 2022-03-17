@@ -3,6 +3,8 @@ from os.path import exists
 
 import pandas as pd
 
+QUESTION_OFFSET = 5
+
 
 def do_total_scoring(parents_score_file):
     # TODO Implement using teacher_score_file
@@ -14,25 +16,26 @@ def do_total_scoring(parents_score_file):
 
 
 # TODO Implement for teacher_score_file
-def do_scoring(parents_score_file, lookup_table_file):
-    parents_scoring_df = pd.read_csv(parents_score_file)
-    column_count = parents_scoring_df.size
-    column_name_to_score = {}
+def do_scoring(parents_scores_file, lookup_table_file):
+    parents_scores_df = pd.read_csv(parents_scores_file)
+    parents_scores_df = parents_scores_df.iloc[:, QUESTION_OFFSET:]
+    question_count = parents_scores_df.size
+    area_name_to_score = {}
     lookup_df = pd.read_csv(lookup_table_file)
     lookup_df.fillna('', inplace=True)
-    for col in range(5, column_count):
-        score = parents_scoring_df.iloc[0][col]
-        looked_up_score = lookup_df.iloc[0][score - 1]
-        for area_col in range(5, 8):
-            column_name = lookup_df.iloc[col - 5][area_col]
-            column_name = column_name.strip()
-            if column_name:
-                if column_name not in column_name_to_score.keys():
-                    column_name_to_score[column_name] = looked_up_score
+    for question_number in range(question_count):
+        score = parents_scores_df.iloc[0][question_number]
+        looked_up_score = lookup_df.iloc[question_number][score + 1]
+        for area_col in range(QUESTION_OFFSET, 8):
+            area = lookup_df.iloc[question_number][area_col]
+            area = area.strip()
+            if area:
+                if area not in area_name_to_score.keys():
+                    area_name_to_score[area] = looked_up_score
                 else:
-                    column_name_to_score[column_name] = column_name_to_score[column_name] + looked_up_score
+                    area_name_to_score[area] = area_name_to_score[area] + looked_up_score
 
-    return column_name_to_score
+    return area_name_to_score
 
 
 def get_t_score(age, gender, column_name_to_score):
