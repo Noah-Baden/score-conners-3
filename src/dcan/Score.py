@@ -6,11 +6,11 @@ import pandas as pd
 QUESTION_OFFSET = 5
 
 
-def do_total_scoring(parents_score_file):
+def do_total_scoring(parents_score_file, age, sex):
     # TODO Implement using teacher_score_file
     lookup_table_file = "data/constant/scoringsheet_conners3parent.csv"
     column_name_to_score = do_scoring(parents_score_file, lookup_table_file)
-    t_score = get_t_score(9, 'female', column_name_to_score)
+    t_score = get_t_score(age, sex, column_name_to_score)
 
     return t_score
 
