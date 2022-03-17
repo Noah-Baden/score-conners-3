@@ -8,7 +8,9 @@ def do_total_scoring():
     # TODO Implement using teacher_score_file
     lookup_table_file = "data/scoringsheet_conners3parent.csv"
     column_name_to_score = do_scoring(parents_score_file, lookup_table_file)
-    get_t_score(9, 'female', column_name_to_score)
+    t_score = get_t_score(9, 'female', column_name_to_score)
+
+    return t_score
 
 
 # TODO Implement for teacher_score_file
