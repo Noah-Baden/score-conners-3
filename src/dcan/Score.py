@@ -1,3 +1,4 @@
+import math
 from os.path import exists
 
 import pandas as pd
@@ -35,19 +36,21 @@ def do_scoring(parents_score_file, lookup_table_file):
 
 
 def get_t_score(age, gender, column_name_to_score):
-    result = column_name_to_score.copy()
-    t_val = -1
+    result = {}
     for key in column_name_to_score.keys():
-        csv_file = f'data/{gender}_{key.lower()}.csv'
+        csv_file = f'data/constant/{gender}_{key.lower()}.csv'
         if not exists(csv_file):
             continue
         df = pd.read_csv(csv_file)
+        t_val = 90
         for row in df[str(age)]:
+            if math.isnan(row):
+                t_val -= 1
+                continue
             row = int(row)
-            if row == column_name_to_score[key]:
-                t_val = 90 - row
+            if row <= column_name_to_score[key]:
                 break
-            row += 1
-        score = result[key]
+            t_val -= 1
+        score = column_name_to_score[key]
         result[key] = (score, t_val)
     return result
