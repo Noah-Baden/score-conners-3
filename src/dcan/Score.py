@@ -22,7 +22,7 @@ def do_scoring(parents_score_file, lookup_table_file):
     lookup_df.fillna('', inplace=True)
     for col in range(5, column_count):
         score = parents_scoring_df.iloc[0][col]
-        looked_up_score = lookup_df.iloc[0][score + 1]
+        looked_up_score = lookup_df.iloc[0][score - 1]
         for area_col in range(5, 8):
             column_name = lookup_df.iloc[col - 5][area_col]
             column_name = column_name.strip()
@@ -30,7 +30,7 @@ def do_scoring(parents_score_file, lookup_table_file):
                 if column_name not in column_name_to_score.keys():
                     column_name_to_score[column_name] = looked_up_score
                 else:
-                    column_name_to_score[column_name] += looked_up_score
+                    column_name_to_score[column_name] = column_name_to_score[column_name] + looked_up_score
 
     return column_name_to_score
 
