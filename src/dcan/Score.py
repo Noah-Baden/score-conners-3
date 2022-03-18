@@ -64,11 +64,22 @@ def get_t_score(age, gender, column_name_to_score):
         age_column = df[[column_0_name, age_str]]
         scores_df = age_column.rename(columns={"Unnamed: 0": "t-score", age_str: "raw score"})
         raw_score = column_name_to_score[key]
-        row = None
-        for index, row in scores_df.iterrows():
-            if math.isnan(row['raw score']):
-                continue
-            if int(row['raw score']) <= raw_score:
-                break
-        result[key] = (raw_score, int(row['t-score']))
+        t_score = get_t_score_from_raw_score(raw_score, scores_df)
+        result[key] = (raw_score, t_score)
     return result
+
+
+def get_t_score_from_raw_score(raw_score, scores_df):
+    row = None
+    found = False
+    for index, row in scores_df.iterrows():
+        if math.isnan(row['raw score']):
+            continue
+        if int(row['raw score']) <= raw_score:
+            found = True
+            break
+    if found:
+        t_score = int(row['t-score'])
+    else:
+        t_score = 40
+    return t_score
