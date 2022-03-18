@@ -1,5 +1,6 @@
 import math
 from os.path import exists
+from collections import Counter
 
 import pandas as pd
 
@@ -15,6 +16,19 @@ def do_total_scoring(parents_score_file, age, sex):
     return t_score
 
 
+def get_area_scores(question_number, parents_scores_df, lookup_df):
+    score = parents_scores_df.iloc[0][question_number]
+    looked_up_score = lookup_df.iloc[question_number][score + 1]
+    area_name_to_score = {}
+    for area_col in range(QUESTION_OFFSET, 8):
+        area = lookup_df.iloc[question_number][area_col]
+        area = area.strip()
+        if area:
+            area_name_to_score[area] = looked_up_score
+
+    return area_name_to_score
+
+
 # TODO Implement for teacher_score_file
 def do_scoring(parents_scores_file, lookup_table_file):
     parents_scores_df = pd.read_csv(parents_scores_file)
@@ -23,17 +37,17 @@ def do_scoring(parents_scores_file, lookup_table_file):
     area_name_to_score = {}
     lookup_df = pd.read_csv(lookup_table_file)
     lookup_df.fillna('', inplace=True)
-    for question_number in range(question_count):
-        score = parents_scores_df.iloc[0][question_number]
-        looked_up_score = lookup_df.iloc[question_number][score + 1]
-        for area_col in range(QUESTION_OFFSET, 8):
-            area = lookup_df.iloc[question_number][area_col]
-            area = area.strip()
-            if area:
-                if area not in area_name_to_score.keys():
-                    area_name_to_score[area] = looked_up_score
-                else:
-                    area_name_to_score[area] = area_name_to_score[area] + looked_up_score
+
+    area_scores = \
+        [get_area_scores(question_number, parents_scores_df, lookup_df) for question_number in range(question_count)]
+    for area_score in area_scores:
+        c_dict = Counter(area_name_to_score) + Counter(area_score)
+        area_name_to_score = c_dict
+
+    areas = ['AG', 'EF', 'HY', 'IN', 'LP', 'PR']
+    for area in areas:
+        if area not in area_name_to_score.keys():
+            area_name_to_score[area] = 0
 
     return area_name_to_score
 
