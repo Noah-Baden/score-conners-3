@@ -1,6 +1,7 @@
 import unittest
+import pandas as pd
 
-from dcan.Score import do_total_scoring
+from dcan.Score import do_total_scoring, get_t_score_from_raw_score
 
 
 class ScoreTest(unittest.TestCase):
@@ -34,6 +35,19 @@ class ScoreTest(unittest.TestCase):
         self.assertEqual(len(expected_keys), len(actual_results.keys()))
         for key in expected_keys:
             self.assertEqual(expected_results[key], actual_results[key])
+
+
+    def test_get_t_score_from_raw_score_high(self):
+        raw_score = 23
+        csv_file = 'data/constant/male_lp.csv'
+        df = pd.read_csv(csv_file)
+        age = 9
+        age_str = str(age)
+        column_0_name = 'Unnamed: 0'
+        age_column = df[[column_0_name, age_str]]
+        scores_df = age_column.rename(columns={"Unnamed: 0": "t-score", age_str: "raw score"})
+        t_score = get_t_score_from_raw_score(raw_score, scores_df)
+        self.assertEqual(90, t_score)
 
 
 if __name__ == '__main__':
