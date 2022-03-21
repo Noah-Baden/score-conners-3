@@ -12,4 +12,4 @@
 
 ## Example
 
---parents_file_name "data/sample/inputdata_Conners3parent_female10.csv" --age 10 --sex female
+    --parents_file_name "data/sample/inputdata_Conners3parent_female10.csv" --age 10 --sex female
