@@ -2,14 +2,11 @@
 
 ## Usage
 
-    Score Conners3 exam.
+    ./score-conners-3.sh /path/to/parents/CSV/file age sex
     
-    optional arguments:
-      -h, --help            show this help message and exit
-      --parents_file_name PARENTS_FILE_NAME
-      --sex SEX
-      --age AGE
+    sex should be either "male" or "female" (without the quotes).
+    age should be an integer, such as 10.
 
 ## Example
 
-    --parents_file_name "data/sample/inputdata_Conners3parent_female10.csv" --age 10 --sex female
+    ./score-conners-3.sh /home/miran045/reine097/projects/score-conners-3/data/sample/inputdata_Conners3parent_female10.csv 10 female
