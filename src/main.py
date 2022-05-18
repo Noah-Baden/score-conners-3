@@ -12,16 +12,16 @@ def main(parents_score_file, age_of_child, sex_of_child, parents_or_teacher):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Score Conners3 exam.')
-    parser.add_argument('--parents_file_name', type=str, required=True)
-    parser.add_argument('--sex', type=str, required=True)
+    parser.add_argument('--input_file_name', type=str, required=True)
     parser.add_argument('--age', type=int, required=True)
+    parser.add_argument('--sex', type=str, required=True)
     parser.add_argument('--reporter', type=str, required=True)
 
     args = parser.parse_args()
 
-    parents_file_name = args.parents_file_name
-    if not exists(parents_file_name):
-        print(f'File does not exist: {parents_file_name}')
+    input_file_name = args.input_file_name
+    if not exists(input_file_name):
+        print(f'File does not exist: {input_file_name}')
         sys.exit(-1)
     sex = args.sex.lower()
     if sex not in ["male", "female"]:
@@ -36,4 +36,4 @@ if __name__ == "__main__":
         print("Reporter must be 'parent' or 'teacher'")
         sys.exit(-1)
 
-    main(parents_file_name, age, sex, reporter)
+    main(input_file_name, age, sex, reporter)
