@@ -25,6 +25,29 @@ class ScoreTest(unittest.TestCase):
         for key in expected_keys:
             self.assertEqual(expected_results[key], actual_results[key])
 
+    def test_do_total_scoring_teacher_female_10(self):
+        # TODO Finish
+        parents_score_file = "data/sample/sub1000701_inputdata_teacher_female_10.csv"
+        actual_results = do_total_scoring(parents_score_file, 10, "female", 'teacher')
+        # (IN: 2, 45) (HY: 2, 45) (LE: 4, 44) (AG: 1, 50) (PR: 0, 44)
+        expected_results = \
+            {'IN': (2, 45), 'HY': (2, 45), 'LE': (4, 44), 'AG': (1, 50), 'PR': (0, 44)}
+        expected_keys = expected_results.keys()
+        self.assertEqual(len(expected_keys), len(actual_results.keys()))
+        for key in expected_keys:
+            self.assertEqual(expected_results[key], actual_results[key])
+
+    def test_do_total_scoring_teacher_male_9(self):
+        parents_score_file = "data/sample/sub1000201_inputdata_teacher_9_male.csv"
+        actual_results = do_total_scoring(parents_score_file, 9, "male", 'teacher')
+        # (IN: 0, 42) (HY 0, 41) (LE: 5, 45) (AG: 0, 44) (PR: 0, 43)
+        expected_results = \
+            {'IN': (0, 42), 'HY': (0, 41), 'LE': (5, 45), 'AG': (0, 44), 'PR': (0, 43)}
+        expected_keys = expected_results.keys()
+        self.assertEqual(len(expected_keys), len(actual_results.keys()))
+        for key in expected_keys:
+            self.assertEqual(expected_results[key], actual_results[key])
+
     def test_do_total_scoring_male_10(self):
         parents_score_file = "data/sample/inputdata_Conners3parent_male10.csv"
         actual_results = do_total_scoring(parents_score_file, 10, "male", 'parent')
