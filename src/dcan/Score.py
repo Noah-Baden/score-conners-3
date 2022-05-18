@@ -50,6 +50,7 @@ def do_scoring(scores_file, lookup_table_file):
         c_dict = Counter(area_name_to_score) + Counter(area_score)
         area_name_to_score = c_dict
 
+    # TODO Add areas PI and NI -- only raw score -- no t-score
     if 'parent' in lookup_table_file:
         areas = ['AG', 'EF', 'HY', 'IN', 'LP', 'PR']
     else:
