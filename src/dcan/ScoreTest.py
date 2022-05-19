@@ -31,7 +31,7 @@ class ScoreTest(unittest.TestCase):
         actual_results = do_total_scoring(parents_score_file, 10, "female", 'teacher')
         # (IN: 2, 45) (HY: 2, 45) (LE: 4, 44) (AG: 1, 50) (PR: 0, 44)
         expected_results = \
-            {'IN': (2, 45), 'HY': (2, 45), 'LE': (4, 44), 'AG': (1, 50), 'PR': (0, 44)}
+            {'IN': (3, 47), 'HY': (2, 45), 'LE': (3, 43), 'AG': (0, 45), 'PR': (0, 44)}
         expected_keys = expected_results.keys()
         self.assertEqual(len(expected_keys), len(actual_results.keys()))
         for key in expected_keys:
