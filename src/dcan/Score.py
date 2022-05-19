@@ -33,7 +33,6 @@ def get_area_scores(question_number, scores_df, lookup_df):
     return area_name_to_score
 
 
-# TODO Implement for teacher_score_file
 def do_scoring(scores_file, lookup_table_file):
     scores_df = pd.read_csv(scores_file)
     scores_df = scores_df.iloc[:, QUESTION_OFFSET:]
@@ -44,17 +43,15 @@ def do_scoring(scores_file, lookup_table_file):
 
     area_scores = \
         [get_area_scores(question_number, scores_df, lookup_df) for question_number in range(question_count)]
-    q = 0
     for area_score in area_scores:
-        q += 1
         c_dict = Counter(area_name_to_score) + Counter(area_score)
         area_name_to_score = c_dict
 
-    # TODO Add areas PI and NI -- only raw score -- no t-score
+    # Areas PI and NI -- only raw score -- no t-score
     if 'parent' in lookup_table_file:
-        areas = ['AG', 'EF', 'HY', 'IN', 'LP', 'PR']
+        areas = ['AG', 'EF', 'HY', 'IN', 'LP', 'PR', 'PI', 'NI']
     else:
-        areas = ['AG', 'HY', 'IN', 'LE', 'PR']
+        areas = ['AG', 'HY', 'IN', 'LE', 'PR', 'PI', 'NI']
     for area in areas:
         if area not in area_name_to_score.keys():
             area_name_to_score[area] = 0
@@ -65,21 +62,26 @@ def do_scoring(scores_file, lookup_table_file):
 def get_t_score(age, gender, column_name_to_score, parents_or_teacher):
     result = {}
     for key in column_name_to_score.keys():
-        csv_file = f'data/constant/{parents_or_teacher}/{gender}_{key.lower()}.csv'
-        if not exists(csv_file):
-            continue
-        df = pd.read_csv(csv_file)
-        age_str = str(age)
-        column_0_name = 'Unnamed: 0'
-        age_column = df[[column_0_name, age_str]]
-        scores_df = age_column.rename(columns={"Unnamed: 0": "t-score", age_str: "raw score"})
-        index = contains_multiple_raw_scores(scores_df)
-        while index:
-            scores_df = split_multiple_raw_score(scores_df, index)
+        if key not in ['PI', 'NI']:
+            csv_file = f'data/constant/{parents_or_teacher}/{gender}_{key.lower()}.csv'
+            if not exists(csv_file):
+                continue
+            df = pd.read_csv(csv_file)
+            age_str = str(age)
+            column_0_name = 'Unnamed: 0'
+            age_column = df[[column_0_name, age_str]]
+            scores_df = age_column.rename(columns={"Unnamed: 0": "t-score", age_str: "raw score"})
             index = contains_multiple_raw_scores(scores_df)
-        raw_score = column_name_to_score[key]
-        t_score = get_t_score_from_raw_score(raw_score, scores_df)
-        result[key] = (raw_score, t_score)
+            while index:
+                scores_df = split_multiple_raw_score(scores_df, index)
+                index = contains_multiple_raw_scores(scores_df)
+            raw_score = column_name_to_score[key]
+            t_score = get_t_score_from_raw_score(raw_score, scores_df)
+            result[key] = (raw_score, t_score)
+        else:
+            raw_score = column_name_to_score[key]
+            result[key] = raw_score
+
     return result
 
 
